@@ -104,6 +104,30 @@ export class GreengrassVpceStack extends cdk.Stack {
         new targets.InterfaceVpcEndpointTarget(iotCredVpcEndpoint)
       ),
     });
+
+    // VPC Endpoint for ssm
+    vpc.addInterfaceEndpoint("VpcEndpointForSSM", {
+      service: ec2.InterfaceVpcEndpointAwsService.SSM,
+      privateDnsEnabled: true,
+      securityGroups: [sg],
+      subnets: { subnets },
+    });
+
+    // VPC Endpoint for ssm messages
+    vpc.addInterfaceEndpoint("VpcEndpointForSSMMessages", {
+      service: ec2.InterfaceVpcEndpointAwsService.SSM_MESSAGES,
+      privateDnsEnabled: true,
+      securityGroups: [sg],
+      subnets: { subnets },
+    });
+
+    // VPC Endpoint for ec2 messages
+    vpc.addInterfaceEndpoint("VpcEndpointForEC2Messages", {
+      service: ec2.InterfaceVpcEndpointAwsService.EC2_MESSAGES,
+      privateDnsEnabled: true,
+      securityGroups: [sg],
+      subnets: { subnets },
+    });
   }
 
   private getIoTEndpointPrefix(endpointType: string) {
